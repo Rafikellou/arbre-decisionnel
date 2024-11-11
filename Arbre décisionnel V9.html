@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Arbre Décisionnel - Traumatisme</title>
+    <!-- Inclusion de Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-OPzYWz4sszAXarDK2L4xZmxF1qgnr5i3mF0WvQJ1Yx7p/8Z7zGQzlIEj6F3oBSXg" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        #app {
+            background-color: rgba(255, 255, 255, 0.9);
+            background-image: url('https://files.oaiusercontent.com/file-opHB38gNcbyoBvxSEGyfgxvF?se=2024-11-11T21%3A41%3A28Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Db94d2eb4-a853-4467-9f38-19079e485d01.webp&sig=qpmG9PQzTeZkSfb5iBpj7Af3Ov/XaPrb5Ku8Kyladdo%3D');
+            background-size: cover;
+            background-position: center;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 800px;
+            margin: auto;
+            position: relative;
+            transition: opacity 0.5s ease;
+        }
+        h1 {
+            color: #1e3d59;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        h2 {
+            color: #1e3d59;
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+        p {
+            color: #4a4a4a;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+        button {
+            background-color: #1B3A4B;
+            color: #fff;
+            border: none;
+            padding: 15px 20px;
+            margin: 10px 5px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+            width: 100%;
+            max-width: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+        button:hover {
+            background-color: #16333F;
+        }
+        button:active {
+            animation: bounce 0.3s;
+        }
+        @keyframes bounce {
+            0% { transform: scale(1); }
+            25% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+            75% { transform: scale(0.98); }
+            100% { transform: scale(1); }
+        }
+        .back-button {
+            background-color: transparent;
+            color: #1B3A4B;
+            border: none;
+            font-size: 1em;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            display: flex;
+            align-items: center;
+            padding: 5px;
+        }
+        .back-button i {
+            margin-right: 5px;
+        }
+        .back-button:hover {
+            color: #16333F;
+        }
+        .end-screen {
+            background-color: #e8f1f2;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            transition: opacity 0.5s ease;
+        }
+        .restart-button {
+            background-color: #50c878;
+            color: #fff;
+        }
+        .restart-button:hover {
+            background-color: #45b06a;
+        }
+        .intro-text {
+            font-size: 1em;
+            color: #4a4a4a;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .update-info {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 10px;
+        }
+        .icon {
+            font-size: 50px;
+            color: #1B3A4B;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+            h2 {
+                font-size: 1.2em;
+            }
+            button {
+                font-size: 0.9em;
+                padding: 12px 15px;
+                min-width: unset;
+            }
+            .back-button {
+                font-size: 0.9em;
+            }
+            .icon {
+                font-size: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Arbre Décisionnel - Traumatisme</h1>
+        <p class="intro-text">
+            Cet arbre décisionnel a été créé pour aider les internes dans leur prise de décision. Il est conçu comme un outil d'aide et ne doit pas se substituer à l'expertise du médecin qui l'utilise.
+        </p>
+        <p class="update-info">Dernière mise à jour : Novembre 2024</p>
+        <button onclick="start()">Commencer</button>
+    </div>
+
+    <script>
+        const app = document.getElementById('app');
+        let history = [];
+
+        function render(content) {
+            app.style.opacity = 0;
+            setTimeout(() => {
+                app.innerHTML = content;
+                app.style.opacity = 1;
+            }, 300);
+        }
+
+        function goBack() {
+            if (history.length > 1) {
+                history.pop(); // Supprime l'état actuel
+                let lastState = history[history.length - 1];
+                if (lastState) lastState();
+            } else {
+                restart();
+            }
+        }
+
+        function start() {
+            history = [];
+            history.push(start);
+            render(`
+                <button class="back-button" onclick="goBack()"><i class="fas fa-chevron-left"></i>Retour</button>
+                <i class="fas fa-user-injured icon"></i>
+                <h2>Quel est le contexte du traumatisme ?</h2>
+                <button onclick="traumaContext('haute')">Haute cinétique (haut traumatisme)</button>
+                <button onclick="traumaContext('basse')">Basse cinétique</button>
+            `);
+        }
+
+        // [Le reste du code JavaScript reste inchangé, assurez-vous d'inclure toutes les fonctions]
+
+        function restart() {
+            history = [];
+            start();
+        }
+    </script>
+</body>
+</html>
